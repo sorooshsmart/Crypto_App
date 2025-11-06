@@ -1,0 +1,375 @@
+<Window x:Class="CryptoApp.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="clr-namespace:CryptoApp.ViewModels"
+        mc:Ignorable="d"
+        Title="Crypto Solution" 
+        Height="700" Width="900"
+        MinHeight="600" MinWidth="800"
+        Background="{StaticResource BackgroundBrush}"
+        WindowStartupLocation="CenterScreen"
+        d:DataContext="{d:DesignInstance vm:MainViewModel}">
+
+    <Window.DataContext>
+        <vm:MainViewModel/>
+    </Window.DataContext>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <Border Grid.Row="0" 
+                Background="{StaticResource SurfaceBrush}" 
+                BorderThickness="0,0,0,1"
+                BorderBrush="{StaticResource BorderBrush}"
+                Padding="30,20">
+            <StackPanel>
+                <TextBlock Text="🔐 Crypto Solution" 
+                          FontSize="24" 
+                          FontWeight="Bold"
+                          Foreground="{StaticResource TextBrush}"/>
+                <TextBlock Text="Secure File Encryption &amp; Decryption" 
+                          FontSize="13" 
+                          Foreground="{StaticResource TextSecondaryBrush}"
+                          Margin="0,4,0,0"/>
+            </StackPanel>
+        </Border>
+
+        <!-- Main Content -->
+        <TabControl Grid.Row="1" Margin="20">
+            
+            <!-- Encrypt Tab -->
+            <TabItem Header="🔒 Encrypt File">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <Border Background="{StaticResource SurfaceBrush}" 
+                            CornerRadius="12" 
+                            Padding="30"
+                            Margin="10">
+                        <StackPanel DataContext="{Binding EncryptVM}">
+                            
+                            <!-- File Selection Section -->
+                            <TextBlock Text="File Selection" 
+                                      FontSize="16" 
+                                      FontWeight="SemiBold"
+                                      Foreground="{StaticResource TextBrush}"
+                                      Margin="0,0,0,15"/>
+                            
+                            <Grid Margin="0,0,0,15">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="140"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+
+                                <Label Grid.Row="0" Grid.Column="0" Content="Input File:" Margin="0,0,0,10"/>
+                                <TextBox Grid.Row="0" Grid.Column="1" 
+                                        Text="{Binding InputFilePath, UpdateSourceTrigger=PropertyChanged}" 
+                                        IsReadOnly="True"
+                                        Margin="0,0,10,10"/>
+                                <Button Grid.Row="0" Grid.Column="2" 
+                                       Content="Browse..." 
+                                       Command="{Binding BrowseInputFileCommand}"
+                                       Width="120"
+                                       Margin="0,0,0,10"/>
+
+                                <Label Grid.Row="1" Grid.Column="0" Content="Output File:"/>
+                                <TextBox Grid.Row="1" Grid.Column="1" 
+                                        Text="{Binding OutputFilePath, UpdateSourceTrigger=PropertyChanged}" 
+                                        IsReadOnly="True"
+                                        Margin="0,0,10,0"/>
+                                <Button Grid.Row="1" Grid.Column="2" 
+                                       Content="Browse..." 
+                                       Command="{Binding BrowseOutputFileCommand}"
+                                       Width="120"/>
+                            </Grid>
+
+                            <Separator Background="{StaticResource BorderBrush}" Margin="0,10,0,20"/>
+
+                            <!-- Encryption Settings Section -->
+                            <TextBlock Text="Encryption Settings" 
+                                      FontSize="16" 
+                                      FontWeight="SemiBold"
+                                      Foreground="{StaticResource TextBrush}"
+                                      Margin="0,0,0,15"/>
+
+                            <Grid Margin="0,0,0,15">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="140"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+
+                                <Label Grid.Row="0" Grid.Column="0" Content="Algorithm:" Margin="0,0,0,10"/>
+                                <ComboBox Grid.Row="0" Grid.Column="1" 
+                                         ItemsSource="{Binding Algorithms}" 
+                                         SelectedItem="{Binding SelectedAlgorithm}"
+                                         Margin="0,0,0,10"/>
+
+                                <Label Grid.Row="1" Grid.Column="0" Content="Cipher Mode:" Margin="0,0,0,10"/>
+                                <ComboBox Grid.Row="1" Grid.Column="1" 
+                                         ItemsSource="{Binding Modes}" 
+                                         SelectedItem="{Binding SelectedMode}"
+                                         Margin="0,0,0,10"/>
+
+                                <Label Grid.Row="2" Grid.Column="0" Content="Key Length:"/>
+                                <TextBox Grid.Row="2" Grid.Column="1" 
+                                        Text="{Binding KeyLength, StringFormat={}{0} bytes}" 
+                                        IsReadOnly="True"
+                                        Background="#0F172A"/>
+                            </Grid>
+
+                            <Separator Background="{StaticResource BorderBrush}" Margin="0,10,0,20"/>
+
+                            <!-- Key Source Section -->
+                            <TextBlock Text="Key Source" 
+                                      FontSize="16" 
+                                      FontWeight="SemiBold"
+                                      Foreground="{StaticResource TextBrush}"
+                                      Margin="0,0,0,15"/>
+
+                            <Grid Margin="0,0,0,15">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="140"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                
+                                <Label Grid.Column="0" Content="Key Source:"/>
+                                <ComboBox Grid.Column="1" 
+                                         ItemsSource="{Binding KeySources}" 
+                                         SelectedItem="{Binding SelectedKeySource}"/>
+                            </Grid>
+
+                            <!-- Password Input -->
+                            <Grid Visibility="{Binding IsPasswordKeySource, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                  Margin="0,0,0,15">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="140"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                
+                                <Label Grid.Column="0" Content="Password:"/>
+                                <PasswordBox x:Name="EncryptPasswordBox" 
+                                           Grid.Column="1" 
+                                           PasswordChanged="EncryptPasswordBox_PasswordChanged"/>
+                            </Grid>
+
+                            <!-- Key File Input -->
+                            <Grid Visibility="{Binding IsFileKeySource, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                  Margin="0,0,0,15">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="140"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                
+                                <Label Grid.Column="0" Content="Key File:"/>
+                                <TextBox Grid.Column="1" 
+                                        Text="{Binding KeyFilePath, UpdateSourceTrigger=PropertyChanged}" 
+                                        IsReadOnly="True"
+                                        Margin="0,0,10,0"/>
+                                <Button Grid.Column="2" 
+                                       Content="Browse..." 
+                                       Command="{Binding BrowseKeyFileCommand}"
+                                       Width="120"/>
+                            </Grid>
+
+                            <!-- Random Key Warning -->
+                            <Border Visibility="{Binding IsRandomKeySource, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                   Background="#1E3A5F"
+                                   BorderBrush="{StaticResource PrimaryBrush}"
+                                   BorderThickness="1"
+                                   CornerRadius="6"
+                                   Padding="15"
+                                   Margin="0,0,0,20">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="ℹ️" 
+                                             FontSize="16" 
+                                             Margin="0,0,10,0"
+                                             VerticalAlignment="Center"/>
+                                    <TextBlock Text="A random encryption key will be generated. You won't be able to decrypt without the exact key file."
+                                             TextWrapping="Wrap"
+                                             Foreground="{StaticResource TextSecondaryBrush}"
+                                             VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </Border>
+
+                            <Separator Background="{StaticResource BorderBrush}" Margin="0,0,0,20"/>
+
+                            <!-- Encrypt Button -->
+                            <Button Content="🔒 Encrypt File" 
+                                   Command="{Binding EncryptCommand}"
+                                   Padding="20,15"
+                                   FontSize="16"
+                                   HorizontalAlignment="Stretch"/>
+                            
+                        </StackPanel>
+                    </Border>
+                </ScrollViewer>
+            </TabItem>
+
+            <!-- Decrypt Tab -->
+            <TabItem Header="🔓 Decrypt File">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <Border Background="{StaticResource SurfaceBrush}" 
+                            CornerRadius="12" 
+                            Padding="30"
+                            Margin="10">
+                        <StackPanel DataContext="{Binding DecryptVM}">
+                            
+                            <!-- File Selection Section -->
+                            <TextBlock Text="File Selection" 
+                                      FontSize="16" 
+                                      FontWeight="SemiBold"
+                                      Foreground="{StaticResource TextBrush}"
+                                      Margin="0,0,0,15"/>
+                            
+                            <Grid Margin="0,0,0,15">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="140"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+
+                                <Label Grid.Row="0" Grid.Column="0" Content="Encrypted File:" Margin="0,0,0,10"/>
+                                <TextBox Grid.Row="0" Grid.Column="1" 
+                                        Text="{Binding InputFilePath, UpdateSourceTrigger=PropertyChanged}" 
+                                        IsReadOnly="True"
+                                        Margin="0,0,10,10"/>
+                                <Button Grid.Row="0" Grid.Column="2" 
+                                       Content="Browse..." 
+                                       Command="{Binding BrowseInputFileCommand}"
+                                       Width="120"
+                                       Margin="0,0,0,10"/>
+
+                                <Label Grid.Row="1" Grid.Column="0" Content="Output File:"/>
+                                <TextBox Grid.Row="1" Grid.Column="1" 
+                                        Text="{Binding OutputFilePath, UpdateSourceTrigger=PropertyChanged}" 
+                                        IsReadOnly="True"
+                                        Margin="0,0,10,0"/>
+                                <Button Grid.Row="1" Grid.Column="2" 
+                                       Content="Browse..." 
+                                       Command="{Binding BrowseOutputFileCommand}"
+                                       Width="120"/>
+                            </Grid>
+
+                            <Separator Background="{StaticResource BorderBrush}" Margin="0,10,0,20"/>
+
+                            <!-- Key Source Section -->
+                            <TextBlock Text="Key Source" 
+                                      FontSize="16" 
+                                      FontWeight="SemiBold"
+                                      Foreground="{StaticResource TextBrush}"
+                                      Margin="0,0,0,15"/>
+
+                            <Grid Margin="0,0,0,15">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="140"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                
+                                <Label Grid.Column="0" Content="Key Source:"/>
+                                <ComboBox Grid.Column="1" 
+                                         ItemsSource="{Binding KeySources}" 
+                                         SelectedItem="{Binding SelectedKeySource}"/>
+                            </Grid>
+
+                            <!-- Password Input -->
+                            <Grid Visibility="{Binding IsPasswordKeySource, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                  Margin="0,0,0,15">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="140"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                
+                                <Label Grid.Column="0" Content="Password:"/>
+                                <PasswordBox x:Name="DecryptPasswordBox" 
+                                           Grid.Column="1" 
+                                           PasswordChanged="DecryptPasswordBox_PasswordChanged"/>
+                            </Grid>
+
+                            <!-- Key File Input -->
+                            <Grid Visibility="{Binding IsFileKeySource, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                  Margin="0,0,0,15">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="140"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                
+                                <Label Grid.Column="0" Content="Key File:"/>
+                                <TextBox Grid.Column="1" 
+                                        Text="{Binding KeyFilePath, UpdateSourceTrigger=PropertyChanged}" 
+                                        IsReadOnly="True"
+                                        Margin="0,0,10,0"/>
+                                <Button Grid.Column="2" 
+                                       Content="Browse..." 
+                                       Command="{Binding BrowseKeyFileCommand}"
+                                       Width="120"/>
+                            </Grid>
+
+                            <Separator Background="{StaticResource BorderBrush}" Margin="0,10,0,20"/>
+
+                            <!-- Decrypt Button -->
+                            <Button Content="🔓 Decrypt File" 
+                                   Command="{Binding DecryptCommand}"
+                                   Padding="20,15"
+                                   FontSize="16"
+                                   HorizontalAlignment="Stretch"/>
+                            
+                        </StackPanel>
+                    </Border>
+                </ScrollViewer>
+            </TabItem>
+        </TabControl>
+
+        <!-- Status Bar -->
+        <Border Grid.Row="2" 
+                Background="{StaticResource SurfaceBrush}" 
+                BorderThickness="0,1,0,0"
+                BorderBrush="{StaticResource BorderBrush}"
+                Padding="30,12">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                
+                <TextBlock Text="Status:" 
+                          Foreground="{StaticResource TextSecondaryBrush}"
+                          FontWeight="SemiBold"
+                          Margin="0,0,10,0"/>
+                <TextBlock Grid.Column="1">
+                    <TextBlock.Style>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="Text" Value="{Binding EncryptVM.StatusMessage}"/>
+                            <Setter Property="Foreground" Value="{StaticResource TextBrush}"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding EncryptVM.StatusMessage}" Value="">
+                                    <Setter Property="Text" Value="{Binding DecryptVM.StatusMessage}"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>
